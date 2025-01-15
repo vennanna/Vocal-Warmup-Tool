@@ -1,0 +1,1 @@
+A web application designed to help singers warm up their voices with customizable vocal exercises. It features interactive piano feedback and arpeggio-based exercises tailored to different vocal ranges.
