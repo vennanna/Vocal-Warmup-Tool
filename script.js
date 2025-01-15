@@ -30,8 +30,8 @@ const DEFAULT_EXERCISE = "arpeggio1";
 
 // Gestione esercizi e gruppi
 let currentEditGroupIndex = null;
-let currentGroup = null;  
-let selectedExercise = DEFAULT_EXERCISE; 
+let currentGroup = null;
+let selectedExercise = DEFAULT_EXERCISE;
 
 
 //MODEL: dati e logica dell'applicazione
@@ -206,132 +206,148 @@ const categorizedExercises = {
 const exerciseDetails = {
   vocal1: {
     name: "MMMM",
-    description: "Esegui il suono 'MMMM' per rilassare e riscaldare le corde vocali."
+    description: "Sing the long note without straining; volume does not matter, just focus on activating the vocal cords."
   },
   vocal2: {
     name: "Lip Thrill",
-    description: "Esegui il 'Lip Thrill' per migliorare la respirazione e la risonanza."
+    description: "Perform a lip trill while relaxing the entire vocal apparatus as much as possible. Keep the airflow steady."
   },
   vocal3: {
     name: "Ng",
-    description: "Esegui il suono 'Ng' per migliorare la risonanza e la vibrazione delle corde vocali."
+    description: "Try to connect all the notes smoothly without gaps in the sound—imagine it as stretching for your vocal cords."
   },
   vocal4: {
     name: "Ng-Vocal",
-    description: "Esegui il suono 'Ng' con una tecnica vocale per migliorare la resistenza."
+    description: "Make the transition from 'ng' to vowel as effortless as possible; nothing in your position should change during the switch."
   },
   vocal5: {
     name: "VVVV",
-    description: "Esegui il suono 'VVVV' per riscaldare le corde vocali in modo delicato."
+    description: "This exercise helps relax the false vocal cords. Keep the sound steady."
   },
   vocal6: {
     name: "Hi Hi Hi",
-    description: "Esegui il suono 'Hi Hi Hi' per migliorare la flessibilità vocale."
+    description: "Imagine eating an apple while performing these sounds to project the voice forward."
   },
   vocal7: {
     name: "IAIAIAIAIAIAIAIAIA",
-    description: "Esegui una serie di suoni 'IA' per migliorare la velocità e la precisione."
+    description: "Relax everything, especially your jaw."
   },
   arpeggio1: {
     name: "IEAOU",
-    description: "Esegui l'arpeggio 'IEAOU' per migliorare la postura e l'intonazione."
+    description: "Relax the sound, hit the right notes, and make transitions between vowels smooth and even."
   },
   arpeggio2: {
     name: "UUUU",
-    description: "Esegui l'arpeggio 'UUUU' per aumentare la capacità di resistenza."
+    description: "Keep the sound steady and soften it."
   },
   arpeggio3: {
     name: "Lui",
-    description: "Esegui l'arpeggio 'Lui' per riscaldare le corde vocali."
+    description: "Use the 'L' sound to help bring the voice forward—take advantage of it."
   },
   arpeggio4: {
     name: "IUUU",
-    description: "Esegui l'arpeggio 'IUUU' per migliorare la flessibilità vocale."
+    description: "Focus on correctly performing the intervals without straining on the higher notes."
   },
   arpeggio5: {
     name: "Ha Ha Ha Ha",
-    description: "Esegui il suono 'Ha Ha Ha' per allenare il controllo del respiro."
+    description: "Relax the diaphragm and start the note with air."
   },
   articulation1: {
     name: "GAGIGAGIGAGI",
-    description: "Esegui il suono articolato 'GAGIGAGIGAGI' per migliorare la dizione."
+    description: "Focus on the sound of the consonants."
   },
   articulation2: {
     name: "GHIGHIGHI con glissando",
-    description: "Esegui il suono 'GHIGHIGHI' con un glissando per migliorare la transizione tra le note."
+    description: "Focus on the consonant sounds while keeping the volume consistent."
   },
   articulation3: {
     name: "BABABABABA",
-    description: "Esegui il suono 'BABABABABA' per migliorare la fluidità della voce."
+    description: "Relax the jaw."
   },
   articulation4: {
     name: "MINU",
-    description: "Esegui 'MINU' per allenare la flessibilità delle vocali."
+    description: "Focus on breath support; keep the floating ribs expanded throughout the vocal emission."
   },
   range1: {
     name: "IEEE",
-    description: "Esegui 'IEEE' per migliorare l'estensione vocale."
+    description: "Maintain a soft and projected sound without straining."
   },
   range2: {
     name: "VIA",
-    description: "Esegui 'VIA' per sviluppare la proiezione della voce."
+    description: "Use the 'V' sound to bring the voice forward—stay flexible."
   },
   range3: {
     name: "ZING",
-    description: "Esegui 'ZING' per migliorare la risonanza nelle note alte."
+    description: "The 'ng' sound naturally projects forward; use it to ascend without straining."
   },
   range4: {
     name: "VVV e Lo",
-    description: "Esegui 'VVV e Lo' per migliorare la qualità vocale nelle note basse."
+    description: "Perform this exercise first with the 'V' sound to relax the cords and then with 'Lo' to project the sound forward."
   },
   belt1: {
     name: "Bambini Brutti",
-    description: "Esegui 'Bambini Brutti' per migliorare la potenza nelle note alte."
+    description: "Do NOT release air—let it out completely before producing sound. Imagine being a whining child."
   },
   belt2: {
     name: "GNEGNE",
-    description: "Esegui 'GNEGNE' per allenare la proiezione vocale."
+    description: "Without air, complain like an annoying child."
   },
   belt3: {
     name: "NONONO",
-    description: "Esegui 'NONONO' per migliorare il controllo della voce."
+    description: "Project the sound forward without straining."
   },
   belt4: {
     name: "SolFaMiReDoSolDo",
-    description: "Esegui 'SolFaMiReDoSolDo' per migliorare l'agilità vocale."
+    description: "Have fun and relax."
   },
   belt5: {
     name: "WATA",
-    description: "Esegui 'WATA' per riscaldare e rafforzare le corde vocali."
+    description: "Imagine shooting the sound far away. Like you are a Super Saiyan"
   },
   legit1: {
     name: "IAAAIOOIAAIOOIA",
-    description: "Esegui 'IAAAIOOIAAIOOIA' per migliorare l'estensione vocale."
+    description: "Maintain a soft and relaxed sound."
   },
   legit2: {
     name: "IIII",
-    description: "Esegui 'IIII' per allenare la precisione nelle note alte."
+    description: "Use the 'I' sound to ascend higher than usual. Don’t strain your throat; imagine the sound coming from your cheekbones."
   },
   legit3: {
     name: "Silanelgiardinleroseinfior",
-    description: "Esegui il canto della frase 'Silanelgiardinleroseinfior' per migliorare il controllo del fiato."
+    description: "Think of yourself as an opera singer—fill the room with sound."
   },
   legit4: {
     name: "UIUIUI",
-    description: "Esegui 'UIUIUI' per migliorare la proiezione vocale."
+    description: "Relax and focus on flexibility without increasing volume."
   },
-};
+  cooldown1: {
+    name: "Vocal Fry",
+    description: "Try to imitate the sound. Keep the larynx low and fully relaxed."
+  },
+  cooldown2: {
+    name: "Vocal Fry alto",
+    description: "Try to bring the vocal fry position higher, as if the sound is coming from your cheekbones."
+  }
+}
 
 
 // Gruppi predefiniti
 const defaultGroups = [
   {
-    name: "Vocalizzi Semplici",
-    exercises: ["vocal1", "vocal2", "vocal3", "vocal4"]
+    name: "Quick Warmup",
+    exercises: ["vocal3", "arpeggio2", "articulation4", "belt4", "cooldown1"]
   },
   {
-    name: "Estensione Vocale",
-    exercises: ["range1", "range2", "range3", "range4"]
+    name: "Long Warmup",
+    exercises: ["vocal1", "vocal2", "arpeggio1", "arpeggio3", "articulation1", "articulation2", "legit3"]
+  },
+  {
+    name: "Legit Warmup",
+    exercises: ["vocal1", "vocal4", "arpeggio3", "arpeggio5", "articulation4", "range1", "range4", "legit1", "legit2", "legit3"]
+  },
+  {
+    name: "Belt Warmup",
+    exercises: ["vocal3", "vocal4", "arpeggio2", "articulation2", "articulation4", "belt1", "belt3", "belt5"]
   }
 ];
 
@@ -372,11 +388,11 @@ function getGroupByIndex(index) {
 
 
 function deleteGroup(index) {
-  const savedGroups = getSavedGroups(); 
+  const savedGroups = getSavedGroups();
   if (index >= 0 && index < savedGroups.length) {
-    savedGroups.splice(index, 1); 
-    localStorage.setItem("savedGroups", JSON.stringify(savedGroups)); 
-    renderSavedGroups(); 
+    savedGroups.splice(index, 1);
+    localStorage.setItem("savedGroups", JSON.stringify(savedGroups));
+    renderSavedGroups();
     alert(`Gruppo eliminato con successo!`);
   } else {
     console.error("Indice gruppo non valido");
@@ -782,7 +798,7 @@ document.getElementById("cancel-edit-group").onclick = closeEditGroupModal;
 function playExerciseGroup(exerciseGroup) {
   let currentExerciseIndex = 0; // Indice dell'esercizio corrente
   let completedArpeggiosCumulative = 0; // Arpeggi completati in totale
-  isPlaying = true;  
+  isPlaying = true;
   isPaused = false;
 
   function playCurrentExercise() {
