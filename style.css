@@ -1,0 +1,498 @@
+/* Stile Generale */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #d1e4fb;
+  margin: 0;
+  padding: 20px;
+  color: #1d1d1d;
+}
+
+/* Titoli e Testi */
+h1 {
+  text-align: center;
+  font-size: 3rem;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 1.3rem; 
+  font-weight: bold; 
+  color: #1d1d1d; 
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+#current-exercise-name, 
+#exercise-description-text {
+  font-size: 1.2rem;  
+  color: #1d1d1d;
+}
+
+#current-exercise-display label, 
+#exercise-description label {
+  font-size: 1.4rem;  
+  font-weight: bold;
+}
+
+
+/* Selezione Vocal Range */
+#vocal-range {
+  padding: 6px 14px;
+  border-radius: 8px;       
+  border: 1px solid #ccc;   
+  background-color: #fff; 
+  font-size: 1.2rem;
+  color: #1d1d1d;              
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  appearance: none;         
+  -webkit-appearance: none; 
+  -moz-appearance: none;    
+  cursor: pointer;
+  transition: all 0.3s ease; 
+}
+
+#vocal-range:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+  background-color: #fff; 
+}
+
+#vocal-range:focus {
+  outline: none;
+  border-color: #095971; 
+}
+
+/* Pulsanti Generali */
+
+button, .exercise-btn, .play-example-btn {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; 
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/*Pulsanti Specifici*/
+
+#actions {
+  display: flex;
+  justify-content: center; 
+  align-items: center;      
+  gap: 20px;              
+  margin-top: 20px;        
+}
+
+#stop {
+  background-color: #ad1e40;
+  color: #fff;
+}
+
+#arpeggio {
+  background-color: #0b7255;
+  color: #fff;
+}
+
+#stop:hover {
+  background-color: #8c1733;
+  transform: scale(1.05);
+}
+
+#arpeggio:hover {
+  background-color: #095e46;
+  transform: scale(1.05);
+}
+
+
+/* Barra di Progresso */
+#progress-bar-container {
+  width: 100%;
+  background-color: #fff;
+  height: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+#progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #0052ce;
+  transition: width 0.5s ease-in-out;
+}
+
+
+/* 🎹 Tastiera */
+#piano {
+  display: flex;
+  justify-content: center; 
+  align-items: flex-start;
+  width: 100%; 
+  max-width: 800px;
+  height: auto; 
+  margin: 30px auto; 
+  gap: 5px; 
+}
+
+.key {
+  flex: 1; 
+  max-width: 40px; 
+  height: 15vw; 
+  margin: 2px;
+  border-radius: 3px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+.key.white {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  margin-left: 2px;  
+  margin-right: 2px; 
+}
+
+.key.black {
+  background-color: #1d1d1d;
+  flex: 0.7; 
+  width: 30px;
+  height: 10vw; 
+  margin-left: -2%; 
+  margin-right: -2%;
+  z-index: 2;
+  position: relative;
+}
+
+.key:hover {
+  transform: scale(1.1);
+}
+
+.key.active {
+  background-color: #e4db63;
+  box-shadow: 0 0 10px #ada64b;
+}
+
+
+
+/* Modal e Overlay */
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 400px;
+  max-width: 90%;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  max-height: 80vh;  
+  overflow-y: auto;  
+  padding-right: 10px; 
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: #095971;
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background-color: #d8f5fd;
+}
+.modal.active, .overlay.active {
+  display: block;
+}
+
+
+#edit-modal-title, 
+#new-modal-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1d1d1d;
+  text-align: center;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+}
+
+
+#save-edit-group {
+  background-color: #0b7255;
+  color: white;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#save-edit-group:hover {
+  background-color: #095f47;
+  transform: scale(1.05);
+}
+
+#cancel-edit-group {
+  background-color: #ad1e40; 
+  color: white;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#cancel-edit-group:hover {
+  background-color: #8d1733;
+  transform: scale(1.05);
+}
+
+
+
+#new-group-name {
+  width: 80%;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+  border: 1px solid #1d1d1d;
+  margin-top: 15px;
+  text-align: center;
+}
+
+#save-group {
+  background-color: #0b7255; 
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#save-group:hover {
+  background-color: #095f47; 
+  transform: scale(1.05);
+}
+
+#close-modal {
+  background-color: #ad1e40; 
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#close-modal:hover {
+  background-color: #8d1733;
+  transform: scale(1.05);
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Centra i pulsanti orizzontalmente */
+  align-items: center;      /* Centra i pulsanti verticalmente */
+  gap: 20px;               /* Spazio tra i pulsanti */
+  width: 100%;            /* Occupa tutta la larghezza disponibile */
+  margin-top: 20px;       /* Spazio sopra i pulsanti */
+}
+
+/* Pulsanti Esercizio */
+.exercise-btn {
+  background-color: #205fad; 
+}
+
+.exercise-btn:hover {
+  background-color: #1b4f8d; 
+  transform: scale(1.05);
+}
+
+.play-example-btn {
+  background-color: #6d3f9b; 
+}
+
+.play-example-btn:hover {
+  background-color: #5a3480; 
+  transform: scale(1.05);
+}
+
+
+button {
+  padding: 10px 18px;
+  margin: 5px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button.play-group {
+  background-color: #0b7255; 
+  color: white;
+}
+
+button.play-group:hover {
+  background-color: #095e46;
+  transform: scale(1.05);
+}
+
+button.pause-group {
+  background-color: #57545B; 
+  color: white;
+}
+
+button.pause-group:hover {
+  background-color: #3e3c41;
+  transform: scale(1.05);
+}
+
+
+button.stop-group {
+  background-color: #ad1e40; 
+  color: white;
+}
+
+button.stop-group:hover {
+  background-color: #8c1733;
+  transform: scale(1.05);
+}
+
+button.delete-group {
+  background-color: #972727; 
+  color: white;
+}
+
+button.delete-group:hover {
+  background-color: #812020;
+  transform: scale(1.05);
+}
+
+button.edit-group {
+  background-color: #6d3f9b; 
+  color: white;
+}
+
+button.edit-group:hover {
+  background-color: #442661;
+  transform: scale(1.05);
+}
+
+#group-buttons {
+  display: flex;
+  justify-content: center; 
+  gap: 15px; 
+  margin-top: 20px;
+}
+
+
+/* Sezione creazione gruppo */
+#create-group-container {
+  display: flex;          
+  align-items: center;   
+  gap: 15px;           
+}
+
+
+#create-new-group {
+  background-color: #095971;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#create-new-group:hover {
+  background-color: #0B1F37;
+  transform: scale(1.05);
+}
+
+#create-new-group:active {
+  background-color: #11446C;
+  transform: scale(0.98);
+}
+
+
+
+/*Sezione Esercizi */
+#exercises, .group-section {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+
+.exercise-group, #default-groups, .saved-groups{
+  font-size: 1.2rem;     
+  font-weight: bold;     
+  color: #1d1d1d;      
+  background-color: #eff5fd; 
+  padding: 10px;          
+  border-radius: 8px;     
+  margin-bottom: 10px;    
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+
+.group-section {
+  background-color: #FFFFFF; 
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.group-section h2 {
+  font-size: 1.4rem;
+  color: #0B1F37;  
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+

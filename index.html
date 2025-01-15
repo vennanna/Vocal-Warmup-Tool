@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocal Warmup Tool</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+    <h1>Vocal Warmup Tool</h1>
+  </header>
+
+  <main>
+    <!-- Sezione Superiore -->
+    <section id="top-section">
+
+      <!--Sezione Controlli-->
+      <section id="controls-wrapper">
+
+        <div id="vocal-range-controls">
+          <label> <strong> Vocal Range: </strong> </label>
+          <select id="vocal-range">
+            <option value="soprano">Soprano</option>
+            <option value="contralto">Contralto</option>
+            <option value="tenore">Tenore</option>
+            <option value="basso">Basso</option>
+          </select>
+        </div>
+
+        <!-- Esercizio Corrente -->
+        <div id="current-exercise-display">
+          <label><strong>Current Exercise:</strong></label>
+          <span id="current-exercise-name"> Select Exercise</Select></span>
+        </div>
+
+        <!-- Descrizione Esercizio -->
+        <div id="exercise-description" class="exercise-description">
+          <label><strong>Description:</strong></label>
+          <span id="exercise-description-text">Select an exercise to see the description </span>
+        </div>
+        <div>
+
+          <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+          </div>
+
+
+      </section>
+
+      <!--Sezione Musicale-->
+      <div id="piano">
+
+        <!-- Ottava Basso -->
+        <div class="key white" data-note="C2"></div>
+        <div class="key black" data-note="C#2"></div>
+        <div class="key white" data-note="D2"></div>
+        <div class="key black" data-note="D#2"></div>
+        <div class="key white" data-note="E2"></div>
+        <div class="key white" data-note="F2"></div>
+        <div class="key black" data-note="F#2"></div>
+        <div class="key white" data-note="G2"></div>
+        <div class="key black" data-note="G#2"></div>
+        <div class="key white" data-note="A2"></div>
+        <div class="key black" data-note="A#2"></div>
+        <div class="key white" data-note="B2"></div>
+
+        <!-- Ottava 3 -->
+        <div class="key white" data-note="C3"></div>
+        <div class="key black" data-note="C#3"></div>
+        <div class="key white" data-note="D3"></div>
+        <div class="key black" data-note="D#3"></div>
+        <div class="key white" data-note="E3"></div>
+        <div class="key white" data-note="F3"></div>
+        <div class="key black" data-note="F#3"></div>
+        <div class="key white" data-note="G3"></div>
+        <div class="key black" data-note="G#3"></div>
+        <div class="key white" data-note="A3"></div>
+        <div class="key black" data-note="A#3"></div>
+        <div class="key white" data-note="B3"></div>
+
+        <!-- Ottava 4 -->
+        <div class="key white" data-note="C4"></div>
+        <div class="key black" data-note="C#4"></div>
+        <div class="key white" data-note="D4"></div>
+        <div class="key black" data-note="D#4"></div>
+        <div class="key white" data-note="E4"></div>
+        <div class="key white" data-note="F4"></div>
+        <div class="key black" data-note="F#4"></div>
+        <div class="key white" data-note="G4"></div>
+        <div class="key black" data-note="G#4"></div>
+        <div class="key white" data-note="A4"></div>
+        <div class="key black" data-note="A#4"></div>
+        <div class="key white" data-note="B4"></div>
+
+        <!-- Ottava 5 -->
+        <div class="key white" data-note="C5"></div>
+        <div class="key black" data-note="C#5"></div>
+        <div class="key white" data-note="D5"></div>
+        <div class="key black" data-note="D#5"></div>
+        <div class="key white" data-note="E5"></div>
+        <div class="key white" data-note="F5"></div>
+        <div class="key black" data-note="F#5"></div>
+        <div class="key white" data-note="G5"></div>
+        <div class="key black" data-note="G#5"></div>
+        <div class="key white" data-note="A5"></div>
+        <div class="key black" data-note="A#5"></div>
+        <div class="key white" data-note="B5"></div>
+
+        <!-- Ottava 6 -->
+        <div class="key white" data-note="C6"></div>
+        <div class="key black" data-note="C#6"></div>
+        <div class="key white" data-note="D6"></div>
+        <div class="key black" data-note="D#6"></div>
+        <div class="key white" data-note="E6"></div>
+        <div class="key white" data-note="F6"></div>
+        <div class="key black" data-note="F#6"></div>
+        <div class="key white" data-note="G6"></div>
+        <div class="key black" data-note="G#6"></div>
+        <div class="key white" data-note="A6"></div>
+        <div class="key black" data-note="A#6"></div>
+        <div class="key white" data-note="B6"></div>
+      </div>
+
+      <div id="actions">
+        <button id="stop">Stop</button>
+        <button id="arpeggio">Play Exercize </button>
+      </div>
+
+    </section>
+
+    <!--Sezione Inferiore-->
+    <section id="bottom-section">
+
+      <!--Sezione Esercizi-->
+      <section id="exercises">
+        <h2> Vocal Exercises: </h2>
+
+        <!--Gruppo 1: Semplici Vocalizzi-->
+        <div class="exercise-group">
+          <h3>Simple vocal exercises: </h3>
+          <ul>
+            <li>
+              <button class="exercise-btn" data-exercise="vocal1">MMMM</button>
+              <button class="play-example-btn" data-audio="audio-examples/vocal1.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="vocal2">Lip Thirll</button>
+              <button class="play-example-btn" data-audio="audio-examples/vocal2.m4a"> Demo </button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="vocal3">Ng</button>
+              <button class="play-example-btn" data-audio="audio-examples/vocal3.m4a"> Demo </button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="vocal4">Ng - vocal</button>
+              <button class="play-example-btn" data-audio="audio-examples/vocal4.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="vocal5">VVVV</button>
+              <button class="play-example-btn" data-audio="audio-examples/vocal5.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="vocal6">Hi Hi Hi</button>
+              <button class="play-example-btn" data-audio="audio-examples/vocal6.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="vocal7"> IAIAIAIAIA </button>
+              <button class="play-example-btn" data-audio="audio-examples/vocal7.m4a"> Demo</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Gruppo 2: Arpeggi e intervalli -->
+        <div class="exercise-group">
+          <h3>Arpeggios and Intervals: </h3>
+          <ul>
+            <li>
+              <button class="exercise-btn" data-exercise="arpeggio1">IEAOU</button>
+              <button class="play-example-btn" data-audio="audio-examples/arpeggio1.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="arpeggio2"> UUUU </button>
+              <button class="play-example-btn" data-audio="audio-examples/arpeggio2.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="arpeggio3"> Lui </button>
+              <button class="play-example-btn" data-audio="audio-examples/arpeggio3.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="arpeggio4"> IUUI </button>
+              <button class="play-example-btn" data-audio="audio-examples/arpeggio4.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="arpeggio5"> Ha Ha Ha Ha </button>
+              <button class="play-example-btn" data-audio="audio-examples/arpeggio5.m4a"> Demo</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Gruppo 3: Articolazione -->
+        <div class="exercise-group">
+          <h3>Articulation: </h3>
+          <ul>
+            <li>
+              <button class="exercise-btn" data-exercise="articulation1"> GAGIGAGIGAGI </button>
+              <button class="play-example-btn" data-audio="audio-examples/articulation1.m4a"> Demo </button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="articulation2"> GHIGHIGHI con glissando</button>
+              <button class="play-example-btn" data-audio="audio-examples/articulation2.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="articulation3"> BABABABA </button>
+              <button class="play-example-btn" data-audio="audio-examples/articulation3.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="articulation4">MINU</button>
+              <button class="play-example-btn" data-audio="audio-examples/articulation4.m4a">Demo</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Gruppo 4: Estensione vocale -->
+        <div class="exercise-group">
+          <h3>Vocal Range:</h3>
+          <ul>
+            <li>
+              <button class="exercise-btn" data-exercise="range1">IEEE</button>
+              <button class="play-example-btn" data-audio="audio-examples/range1.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="range2">VIA</button>
+              <button class="play-example-btn" data-audio="audio-examples/range2.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="range3"> ZING </button>
+              <button class="play-example-btn" data-audio="audio-examples/range3.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="range4"> VVV e Lo </button>
+              <button class="play-example-btn" data-audio="audio-examples/range4.m4a"> Demo</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Gruppo 5: Belt -->
+        <div class="exercise-group">
+          <h3>Belt:</h3>
+          <ul>
+            <li>
+              <button class="exercise-btn" data-exercise="belt1">Bambini brutti</button>
+              <button class="play-example-btn" data-audio="audio-examples/belt1.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="belt2">GNEGNE</button>
+              <button class="play-example-btn" data-audio="audio-examples/belt2.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="belt3"> NONONO </button>
+              <button class="play-example-btn" data-audio="audio-examples/belt3.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="belt4"> SolFaMiReDoSolDo</button>
+              <button class="play-example-btn" data-audio="audio-examples/belt4.m4a">Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="belt5">WATA</button>
+              <button class="play-example-btn" data-audio="audio-examples/belt5.m4a">Demo</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Gruppo 6: Legit -->
+        <div class="exercise-group">
+          <h3>Legit:</h3>
+          <ul>
+            <li>
+              <button class="exercise-btn" data-exercise="legit1"> IAAIOOIAAIOOIA </button>
+              <button class="play-example-btn" data-audio="audio-examples/legit1.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="legit2"> IIII </button>
+              <button class="play-example-btn" data-audio="audio-examples/legit2.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="legit3"> Silanelgiardinleroseinfior </button>
+              <button class="play-example-btn" data-audio="audio-examples/legit3.m4a"> Demo</button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="legit4">UIUIUI</button>
+              <button class="play-example-btn" data-audio="audio-examples/legit4.m4a"> Demo</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Gruppo 7: Cool down -->
+        <div class="exercise-group">
+          <h3>Cool Down:</h3>
+          <ul>
+            <li>
+              <button class="exercise-btn" data-exercise="cooldown1">Vocal Fry</button>
+              <button class="play-example-btn" data-audio="audio-examples/cooldown1.m4a"> Demo </button>
+            </li>
+            <li>
+              <button class="exercise-btn" data-exercise="cooldown2">Vocal Fry Alto</button>
+              <button class="play-example-btn" data-audio="audio-examples/cooldown2.m4a"> Demo </button>
+            </li>
+          </ul>
+        </div>
+
+      </section>
+
+      <!-- Contenitore Principale dei Gruppi -->
+      <div id="groups-container">
+
+        <!-- Gruppi Predefiniti -->
+        <div id="default-groups-container" class="group-section">
+          <h2>Predefined Groups:</h2>
+          <div id="default-groups"></div>
+        </div>
+
+        <!-- Gruppi Salvati -->
+        <div id="saved-groups-container" class="group-section">
+          <h2>Saved Groups:</h2>
+          <div id="saved-groups"></div>
+        </div>
+
+        <!-- Creazione Nuovo Gruppo -->
+        <div id="create-group-container" class="group-section">
+          <h2>Create a New Group of Exercises:</h2>
+          <button id="create-new-group">NEW</button>
+        </div>
+
+      </div>
+
+
+
+      <!-- Modali -->
+      <div id="modals">
+        <div id="global-modal-overlay" class="overlay" style="display: none;"></div>
+
+        <!-- Modal Nuovo Gruppo -->
+        <!-- Modal Nuovo Gruppo -->
+        <div id="new-modal" class="modal" aria-labelledby="new-modal-title" aria-hidden="true">
+          <div class="modal-content">
+            <h3 id="new-modal-title">New Group: </h3>
+
+            <div id="new-exercise-list">
+              <!-- Lista dinamica di checkbox per gli esercizi -->
+              <div id="exercise-list"></div>
+            </div>
+
+            <input id="new-group-name" type="text" placeholder="Nome del gruppo">
+
+            <!-- Contenitore per i pulsanti -->
+            <div id="group-buttons">
+              <button id="save-group">Save </button>
+              <button id="close-modal">Cancel</button>
+            </div>
+
+          </div>
+        </div>
+
+
+        <!-- Modal Modifica Gruppo -->
+        <div id="edit-modal" class="modal" aria-labelledby="edit-modal-title" aria-hidden="true">
+          <div class="modal-content">
+            <h3 id="edit-modal-title">Edit group</h3>
+            <div id="edit-exercise-list">
+              <!-- Lista dinamica di checkbox per gli esercizi -->
+            </div>
+
+            <!-- Contenitore per centrare i pulsanti -->
+            <div class="button-container">
+              <button id="save-edit-group">Save</button>
+              <button id="cancel-edit-group">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.37/Tone.js"></script>
+  <script src="script.js"></script>
+
+
+</html>
