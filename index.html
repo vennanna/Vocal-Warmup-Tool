@@ -27,8 +27,10 @@
           <label> <strong> Vocal Range: </strong> </label>
           <select id="vocal-range">
             <option value="soprano">Soprano</option>
+            <option value="mezzo"> Mezzo </option>
             <option value="contralto">Contralto</option>
             <option value="tenore">Tenore</option>
+            <option value="baritone">Contralto</option>
             <option value="basso">Basso</option>
           </select>
         </div>
@@ -129,7 +131,7 @@
 
       <div id="actions">
         <button id="stop">Stop</button>
-        <button id="arpeggio">Play Exercize </button>
+        <button id="arpeggio">Play Exercisae </button>
       </div>
 
     </section>
@@ -339,13 +341,36 @@
 
       </div>
 
+      <section id="vocal-gym">
+        <h2> Pitch Exercises </h2>
+        <div class="button-container">
+          <button id="arpeggios-btn">Arpeggios</button>
+          <button id="scale-btn">Scale</button>
+          <button id="random-intervals-btn"> Random Intervals </button>
+          <button id="stopPlayback">Stop</button> 
+        </div>
+        <div id="simple-exercise-description" class="exercise-instruction"></div>
+
+
+        <div id="instruction-display"></div>
+        <div id="note-display"></div>
+        <div id="advice-display"></div>
+
+        <div id="modal" class="modal-overlay">
+          <div class="modal-content">
+            <h2 id="modal-title">Scegli opzione</h2>
+            <div class="modal-buttons" id="modal-buttons"></div>
+            <button onclick="closeModal()">Chiudi</button>
+          </div>
+        </div>
+      </section>
 
 
       <!-- Modali -->
       <div id="modals">
         <div id="global-modal-overlay" class="overlay" style="display: none;"></div>
 
-        <!-- Modal Nuovo Gruppo -->
+
         <!-- Modal Nuovo Gruppo -->
         <div id="new-modal" class="modal" aria-labelledby="new-modal-title" aria-hidden="true">
           <div class="modal-content">
@@ -363,6 +388,8 @@
               <button id="save-group">Save </button>
               <button id="close-modal">Cancel</button>
             </div>
+
+
 
           </div>
         </div>
@@ -389,8 +416,9 @@
     </section>
   </main>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.37/Tone.js"></script>
-  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tone@latest/build/Tone.js"></script>
+  <script type="module" src="script.js"></script>
+
 
 
 </html>
