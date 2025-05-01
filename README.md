@@ -1,6 +1,19 @@
 # Vocal-Warmup-Tool
 
+
 A web application designed to help singers warm up their voices with customizable vocal exercises. It features interactive piano feedback and arpeggio-based exercises tailored to different vocal ranges.
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Features](#features)
+3. [How to Install](#how-to-install)
+4. [How to Use](#how-to-use)
+5. [Technologies Used](#technologies-used)
+6. [Code Architecture](#code-architecture)
+7. [Visual Preview](#visual-preview)
+8. [License & Usage Terms](#license--usage-terms)
+
 
 ## Overview
 Vocal-Warmup-Tool is a web-based application that enables users to fully customize their vocal warmup routine. It offers a wide selection of vocal exercises, organized into categories based on their function (e.g., articulation, range, belt, legit), and allows users to adapt each exercise to their personal vocal range. Users can also create and save custom groups of exercises to always have their ideal warmup sequence ready.
@@ -43,6 +56,7 @@ Simply open index.html in your browser. Or, if you are using Visual Studio Code:
 
 ## How to Use
 
+
 ### 1. Single Exercises:
 
 You can perform a single exercise by selecting it from the corresponding category. Exercises in different categories focus on different vocal skills. After selecting an exercise, a short description will appear explaining how to perform it correctly.
@@ -83,7 +97,9 @@ Finally, you can train your pitch accuracy through dedicated exercises:
 
 The Stop button stops the execution of any ongoing pitch exercise immediately.
 
+
 ## Technologies Used
+
 
 ### Core Technologies:
 1. JavaScript: is the main programming language used to implement the app’s logic and interactivity. It handles everything from sound generation and pitch detection to UI updates and exercise flow control.
@@ -104,7 +120,12 @@ Using MVC improves code separation, modularity, and maintainability, making it e
 1. Tone.js: A powerful Web Audio framework for creating and scheduling audio. Tone.js is used to generate all the sounds in the application, including keyboard tones and dynamic playback of all exercises and scales.
 2. Yin Pitch Detector: A JavaScript implementation of the YIN algorithm, based on autocorrelation. This algorithm is used to estimate the fundamental frequency of sung notes during pitch training exercises.
 
+
+
 ## Code Architecture 
+
+
+
 ### Classic Exercises Playback:
 This section describes the logic behind the execution of classic vocal exercises, i.e. those that do not use pitch detection.
 
@@ -590,5 +611,21 @@ This process continues until all target notes have been successfully sung.
 ## Visual Preview 
 
 
-## 📃 License
-(Licenza, se prevista)
+
+### Home: 
+![Home](Screenshots/Home.jpg)
+
+### Exercises: 
+![Exercises](Screenshots/Exercises.jpg)
+
+### Groups: 
+![Groups](Screenshots/Groups.jpg)
+
+### Pitch Exercises: 
+![Pitch exercises](Screenshots/Pitch%20exercises.jpg)
+
+
+## License & Usage Terms
+
+Warmup-Vocal-Tool © 2025 All Rights Reserved.  
+No part of this project may be reproduced or used without permission.
