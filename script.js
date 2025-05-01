@@ -1,4 +1,6 @@
-// === VARIABILI GLOBALI ===
+
+import { Yin } from "https://cdn.jsdelivr.net/npm/@dipscope/pitch-detector/+esm";
+
 
 // Stato di riproduzione
 let isPlaying = false;
@@ -32,6 +34,24 @@ const DEFAULT_EXERCISE = "arpeggio1";
 let currentEditGroupIndex = null;
 let currentGroup = null;
 let selectedExercise = DEFAULT_EXERCISE;
+
+
+// Pitch exercises
+const yin = new Yin({ bufferSize: 2048, threshold: 0.15 });
+let audioContext;
+let source;
+let processor;
+let isListening = false;
+let targetNotes = [];
+let currentStep = 0;
+let exerciseType = null;
+let selectedRoot = "C4";
+let pendingExercise = null;
+let vocalRange = { min: 98, max: 523 };
+let chosenIntervals = [];
+let exercisePart = null;
+
+
 
 
 //MODEL: dati e logica dell'applicazione
@@ -356,11 +376,23 @@ const defaultGroups = [
 
 // Definiamo i range delle vocalità
 const vocalRanges = {
-  soprano: { min: "C4", max: "C6" },
-  contralto: { min: "A3", max: "A5" },
-  tenore: { min: "C3", max: "C5" },
-  basso: { min: "E2", max: "E4" }
+  basso: { min: "E2", max: "E3" },
+  baritone: { min: "G2", max: "G3" },
+  tenore: { min: "C3", max: "C4" },
+  contralto: { min: "F3", max: "F4" },
+  mezzo: { min: "A3", max: "A4" },
+  soprano: { min: "C4", max: "C5" }
 };
+
+// Pitch exercises
+
+const simpleExercisesDescriptions = {
+  arpeggios: "First listen to the arpeggio. Then sing the first note; once you sing it correctly, it will be played again for confirmation. Wait for the next instruction on screen before singing the next note.",
+  scales: "First listen to the full scale. Then sing the first note; once you sing it correctly, it will be played again for confirmation. Wait for the next instruction on screen before singing the next note.",
+  randomIntervals: "First listen to the full sequence of intervals. Then sing the first note; once you sing it correctly, it will be played again for confirmation. Wait for the next instruction on screen before singing the next note, which will be separated from the previous one by the interval shown (the note in parentheses is the target)."
+};
+
+
 
 
 // Funzioni per la gestione dei GRUPPI di esercizi
@@ -369,7 +401,6 @@ function getSavedGroups() {
   try {
     return JSON.parse(localStorage.getItem("savedGroups")) || [];
   } catch (error) {
-    console.error("Errore durante il recupero dei gruppi salvati:", error);
     return [];
   }
 }
@@ -407,12 +438,9 @@ function generateInitialArpeggio(minNote, referenceNote = DEFAULT_REFERENCE_NOTE
 
   // Controlla se l'esercizio esiste
   if (!notes || !durations) {
-    console.error(`Esercizio "${exerciseType}" non trovato.`);
     return [];
   }
 
-  console.log(`Generazione arpeggio per esercizio: ${exerciseType}`);
-  console.log(`Note di base: ${notes}, Durate: ${durations}`);
 
   // Frequenze di riferimento
   const referenceFreq = Tone.Frequency(referenceNote).toFrequency();
@@ -456,7 +484,6 @@ initializeKeyboardFeedback(keys);
 
 function initializeKeyboardFeedback(keys) {
   if (keys.length === 0) {
-    console.error("Nessun tasto trovato! Controlla l'HTML.");
     return;
   }
 
@@ -792,6 +819,169 @@ document.getElementById("cancel-edit-group").onclick = closeEditGroupModal;
 
 
 
+// Pitch Exercises: 
+function showExerciseDescription(type) {
+  const descriptionBox = document.getElementById('simple-exercise-description');
+  if (type === 'Arpeggi') {
+    descriptionBox.textContent = simpleExercisesDescriptions.arpeggios;
+  } else if (type === 'Scale') {
+    descriptionBox.textContent = simpleExercisesDescriptions.scales;
+  } else if (type === 'Intervalli') {
+    descriptionBox.textContent = simpleExercisesDescriptions.randomIntervals;
+  }
+}
+
+function openModal(type) {
+  const modal = document.getElementById('modal');
+  const title = document.getElementById('modal-title');
+  const buttons = document.getElementById('modal-buttons');
+  modal.style.display = 'flex';
+
+  buttons.innerHTML = '';
+
+  if (type === 'Arpeggi') {
+    title.textContent = 'Choose an Arpeggio Type ';
+    addButton('major', (exerciseType) => openNoteModal('Arpeggi', exerciseType));
+    addButton('minor', (exerciseType) => openNoteModal('Arpeggi', exerciseType));
+  } else if (type === 'Scale') {
+    title.textContent = 'Choose a Scale Type';
+    addButton('major', (exerciseType) => openNoteModal('Scale', exerciseType));
+    addButton('minor', (exerciseType) => openNoteModal('Scale', exerciseType));
+    addButton('cromatic', (exerciseType) => openNoteModal('Scale', exerciseType));
+  }
+}
+
+function openNoteModal(exerciseCategory, exerciseType) {
+  const modal = document.getElementById('modal');
+  const title = document.getElementById('modal-title');
+  const buttons = document.getElementById('modal-buttons');
+  modal.style.display = 'flex';
+
+  buttons.innerHTML = '';
+  title.textContent = 'Choose the starting note';
+
+  const startingNotes = ['G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
+
+  startingNotes.forEach(note => {
+    addButton(note, (selectedNote) => {
+      closeModal();
+      if (exerciseCategory === 'Arpeggi') startArpeggio(exerciseType, selectedNote);
+      else if (exerciseCategory === 'Scale') startScala(exerciseType, selectedNote);
+    });
+  });
+}
+
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+  startMicrophone();
+}
+
+function addButton(text, callback) {
+  const btn = document.createElement('button');
+  btn.textContent = text;
+  btn.onclick = () => {
+    callback(text);
+  };
+  document.getElementById('modal-buttons').appendChild(btn);
+}
+
+
+// UTILITY: funzioni di supporto
+
+function playExampleAudio(audioFile) {
+  // Se un audio è già in riproduzione, lo ferma
+  if (currentExampleAudio) {
+    currentExampleAudio.pause();
+    currentExampleAudio.currentTime = 0;
+  }
+
+  // Crea un nuovo oggetto Audio e lo riproduce
+  currentExampleAudio = new Audio(audioFile);
+  currentExampleAudio.play();
+}
+
+// Aggiunge l'evento ai pulsanti di esempio
+document.querySelectorAll(".play-example-btn").forEach(button => {
+  button.addEventListener("click", function () {
+    const audioFile = this.getAttribute("data-audio");
+    playExampleAudio(audioFile);
+  });
+});
+
+
+function saveNewGroup() {
+  const groupNameInput = document.getElementById("new-group-name");
+  const groupName = groupNameInput.value.trim();
+
+  if (!groupName) {
+    alert("Inserisci un nome per il gruppo.");
+    return;
+  }
+
+  const selectedExercises = Array.from(
+    document.querySelectorAll("#new-exercise-list input[type='checkbox']")
+  )
+    .filter((checkbox) => checkbox.checked)
+    .map((checkbox) => checkbox.value);
+
+  if (selectedExercises.length === 0) {
+    alert("Seleziona almeno un esercizio.");
+    return;
+  }
+
+  // Salva il gruppo (Model)
+  const newGroup = { name: groupName, exercises: selectedExercises };
+  saveGroupToLocalStorage(newGroup);
+
+  // Aggiorna la lista dei gruppi salvati (View)
+  renderSavedGroups();
+
+  // Chiudi il modal (View)
+  closeNewGroupModal();
+
+  alert(`Gruppo "${groupName}" salvato con successo!`);
+}
+
+// Event listener: per salvare i gruppi
+document.getElementById("save-group").addEventListener("click", saveExerciseGroup);
+
+document.getElementById('stopPlayback').addEventListener('click', () => {
+  stopExercise(); // Usa la funzione vera che resetta tutto
+  console.log('Playback fermato');
+});
+
+// Pitch exercises
+function frequencyToNote(frequency) {
+  const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const A4 = 440;
+  const semitone = 12 * Math.log2(frequency / A4);
+  const noteIndex = Math.round(semitone) + 57;
+  const octave = Math.floor(noteIndex / 12);
+  const noteName = notes[(noteIndex % 12 + 12) % 12];
+  return `${noteName}${octave}`;
+}
+
+function noteToFrequency(note) {
+  const match = note.match(/^([A-G]#?)(\d)$/);
+  if (!match) return null;
+  const [_, noteName, octave] = match;
+  const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const noteIndex = notes.indexOf(noteName);
+  const noteNumber = noteIndex + parseInt(octave) * 12;
+  const A4_INDEX = 9 + 4 * 12;
+  const semitoneDiff = noteNumber - A4_INDEX;
+  return 440 * Math.pow(2, semitoneDiff / 12);
+}
+
+function getCentsDifference(frequency, targetFrequency) {
+  return 1200 * Math.log2(frequency / targetFrequency);
+}
+
+
+
+
+
 // CONTROLLER: Logica di coordinamento e iterazioni utente
 
 // Riproduzione esercizi:
@@ -836,6 +1026,10 @@ function playExerciseGroup(exerciseGroup) {
 
 
 function playArpeggioWithRange(selectedExerciseParam = DEFAULT_EXERCISE, totalExercises = 1, onCycleComplete = null, completedArpeggiosCumulative = 0) {
+  if (isPlaying) {
+    stopArpeggio(); // Ferma eventuale esercizio precedente
+  }
+
   const selectedRange = vocalRanges[vocalRangeSelector.value];
   minNote = selectedRange.min;
   maxNote = selectedRange.max;
@@ -854,7 +1048,7 @@ function playArpeggioWithRange(selectedExerciseParam = DEFAULT_EXERCISE, totalEx
   completedRangeCycles = 0;
   totalRangeCyclesRequired = 1;
   completedArpeggios = 0;
-  totalArpeggiosRequired = totalExercises * 48;
+  totalArpeggiosRequired = totalExercises * 15;
 
   console.log(`Numero totale di arpeggi richiesti: ${totalArpeggiosRequired}`);
   console.log(`Numero totale di salite e discese richieste per esercizio: ${totalRangeCyclesRequired}`);
@@ -865,6 +1059,8 @@ function playArpeggioWithRange(selectedExerciseParam = DEFAULT_EXERCISE, totalEx
     console.error("Elemento con ID 'progress-bar' non trovato!");
     return;
   }
+
+
   progressBar.style.width = "0%";
   console.log("Elemento progress-bar trovato:", progressBar);
 
@@ -873,7 +1069,6 @@ function playArpeggioWithRange(selectedExerciseParam = DEFAULT_EXERCISE, totalEx
 }
 
 function playNextNote() {
-  console.log(`Esecuzione di playNextNote. Esercizio corrente: ${selectedExercise}`);
 
   // Se è in pausa, blocca l'esecuzione
   if (isPaused) {
@@ -916,8 +1111,10 @@ function playNextNote() {
         currentDirection = "discendente";
       }
     } else {
+
+      const descendingStep = 3; // Scende di 3 semitoni invece di 1
       notesData = notesData.map((note) => ({
-        note: Tone.Frequency(note.note).transpose(-1).toNote(),
+        note: Tone.Frequency(note.note).transpose(-descendingStep).toNote(),
         duration: note.duration
       }));
 
@@ -958,6 +1155,9 @@ function stopArpeggio() {
     progressBar.style.width = "0%";
   }
 }
+
+
+
 
 // Event Listener: aggiorna l'esercizio selezionato al click di un pulsante
 document.querySelectorAll(".exercise-btn").forEach((button) => {
@@ -1157,62 +1357,334 @@ document.getElementById("save-edit-group").onclick = () => {
 };
 
 
-// UTILITY: funzioni di supporto
 
-function playExampleAudio(audioFile) {
-  // Se un audio è già in riproduzione, lo ferma
-  if (currentExampleAudio) {
-    currentExampleAudio.pause();
-    currentExampleAudio.currentTime = 0;
+
+
+
+
+// Pitch Exercises
+
+async function startMicrophone() {
+  if (!audioContext || audioContext.state === 'closed') {
+    audioContext = new AudioContext();
   }
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  source = audioContext.createMediaStreamSource(stream);
+  processor = audioContext.createScriptProcessor(2048, 1, 1);
+  source.connect(processor);
+  processor.connect(audioContext.destination);
 
-  // Crea un nuovo oggetto Audio e lo riproduce
-  currentExampleAudio = new Audio(audioFile);
-  currentExampleAudio.play();
+  let holdStart = null;
+  let isHolding = false;
+
+  processor.onaudioprocess = (event) => {
+    if (!isListening) return;
+    const input = event.inputBuffer.getChannelData(0);
+    const pitch = yin.detect(input, audioContext.sampleRate);
+
+    if (pitch && targetNotes.length > 0 && targetNotes[currentStep]) {
+      const detected = frequencyToNote(pitch);
+      document.getElementById('note-display').textContent = `Note detected: ${detected}`;
+
+      const expectedFrequency = noteToFrequency(targetNotes[currentStep]);
+      if (!expectedFrequency) return;
+
+      const cents = getCentsDifference(pitch, expectedFrequency);
+
+
+      if (Math.abs(cents) < 40) {
+        if (!holdStart) {
+          holdStart = Date.now();
+          isHolding = true;
+          document.getElementById('instruction-display').textContent = "Hold the pitch...";
+        } else if (Date.now() - holdStart > 500) {
+          if (exerciseType === 'arpeggio' || exerciseType === 'scale') {
+            currentStep++;
+            holdStart = null;
+            isHolding = false;
+            if (currentStep >= targetNotes.length) {
+              document.getElementById('instruction-display').textContent = "Exercise completed!";
+              isListening = false;
+            } else {
+              document.getElementById('instruction-display').textContent = "Good job! Next note:";
+              setTimeout(() => {
+                document.getElementById('instruction-display').textContent = `Sing: ${targetNotes[currentStep]}`;
+                playNote(targetNotes[currentStep - 1]);
+              }, 1000);
+            }
+          }
+
+          if (exerciseType === 'intervalli-random') {
+            playNote(targetNotes[currentStep]); // Suona la nota appena cantata giusta
+            currentStep++;
+            holdStart = null;
+            isHolding = false;
+            if (currentStep >= targetNotes.length) {
+              document.getElementById('instruction-display').textContent = "Exercise completed!";
+              isListening = false;
+            } else {
+              const intervalName = chosenIntervals[currentStep - 1].name;
+              const nextNote = targetNotes[currentStep];
+              document.getElementById('instruction-display').textContent = `Sing a ${intervalName} (${nextNote})`;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
-// Aggiunge l'evento ai pulsanti di esempio
-document.querySelectorAll(".play-example-btn").forEach(button => {
-  button.addEventListener("click", function () {
-    const audioFile = this.getAttribute("data-audio");
-    playExampleAudio(audioFile);
+function playNote(note, time = Tone.now()) {
+  synth.triggerAttackRelease(note, "8n", time);
+}
+
+
+function startArpeggio(type, rootNote) {
+  exerciseType = 'arpeggio';
+  currentStep = 0;
+
+  const semitoneOffsets = (type === 'major') ? [0, 4, 7] : [0, 3, 7];
+
+  const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const rootMatch = rootNote.match(/^([A-G]#?)(\d)$/);
+  const rootIndex = notes.indexOf(rootMatch[1]);
+  const rootOctave = parseInt(rootMatch[2]);
+
+  const ascending = semitoneOffsets.map(offset => {
+    let noteIndex = rootIndex + offset;
+    let octave = rootOctave;
+    while (noteIndex >= 12) {
+      noteIndex -= 12;
+      octave += 1;
+    }
+    return `${notes[noteIndex]}${octave}`;
   });
+
+  const descending = [...ascending].reverse().slice(1);
+  targetNotes = [...ascending, ...descending];
+
+  // Creiamo gli eventi
+  const events = targetNotes.map((note, index) => [index * 0.4, note]);
+
+  if (exercisePart) {
+    exercisePart.dispose();
+  }
+
+  exercisePart = new Tone.Part((time, note) => {
+    playNote(note, time);
+  }, events);
+
+  exercisePart.start(0);
+  Tone.Transport.start();
+
+  document.getElementById('instruction-display').textContent = `Listen to the arpeggio...`;
+
+  const totalDuration = targetNotes.length * 0.4;
+  setTimeout(() => {
+    document.getElementById('instruction-display').textContent = `Now sing the arpeggio!`;
+    isListening = true;
+  }, totalDuration * 1000);
+}
+
+
+function startScala(type, rootNote) {
+  exerciseType = 'scale';
+  currentStep = 0;
+
+  const scalePatterns = {
+    "major": [0, 2, 4, 5, 7, 9, 11, 12],
+    "minor": [0, 2, 3, 5, 7, 8, 10, 12],
+    "cromatic": Array.from({ length: 13 }, (_, i) => i)
+  };
+
+  const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const rootMatch = rootNote.match(/^([A-G]#?)(\d)$/);
+  const rootIndex = notes.indexOf(rootMatch[1]);
+  const rootOctave = parseInt(rootMatch[2]);
+
+  const ascending = scalePatterns[type].map(offset => {
+    let noteIndex = rootIndex + offset;
+    let octave = rootOctave;
+    while (noteIndex >= 12) {
+      noteIndex -= 12;
+      octave += 1;
+    }
+    return `${notes[noteIndex]}${octave}`;
+  });
+
+  const descending = [...ascending].reverse().slice(1);
+  targetNotes = [...ascending, ...descending];
+
+  // Creiamo gli eventi
+  const events = targetNotes.map((note, index) => [index * 0.4, note]);
+
+  if (exercisePart) {
+    exercisePart.dispose();
+  }
+
+  exercisePart = new Tone.Part((time, note) => {
+    playNote(note, time);
+  }, events);
+
+  exercisePart.start(0);
+  Tone.Transport.start();
+
+  document.getElementById('instruction-display').textContent = `Listen to the scale...`;
+
+  const totalDuration = targetNotes.length * 0.4;
+  setTimeout(() => {
+    document.getElementById('instruction-display').textContent = 'Now sing the scale!';
+    isListening = true;
+  }, totalDuration * 1000);
+}
+
+
+function startAccordiRandom(startingNote) {
+  exerciseType = 'intervalli-random';
+  currentStep = 0;
+  targetNotes = [startingNote];
+  chosenIntervals = [];
+  const intervalsAvailable = [
+    { name: "Major second up", semitones: 2 },
+    { name: "Minor second down", semitones: -1 },
+    { name: "Major third up", semitones: 4 },
+    { name: "Minor third down", semitones: -3 },
+    { name: "Perfect fourth up", semitones: 5 },
+    { name: "Perfect fifth down", semitones: -7 }
+  ];
+
+
+  for (let i = 0; i < 5; i++) {
+    const random = intervalsAvailable[Math.floor(Math.random() * intervalsAvailable.length)];
+    chosenIntervals.push(random);
+  }
+
+  let currentFrequency = noteToFrequency(startingNote);
+
+  chosenIntervals.forEach(interval => {
+    currentFrequency *= Math.pow(2, interval.semitones / 12);
+    const nextNote = frequencyToNote(currentFrequency);
+    targetNotes.push(nextNote);
+  });
+
+  Tone.start();
+
+  // Creiamo gli eventi come negli altri esercizi
+  const events = targetNotes.map((note, index) => [index * 0.8, note]); // 0.8s invece di 0.4s per dare tempo di ascoltare
+
+  if (exercisePart) {
+    exercisePart.dispose();
+  }
+
+  exercisePart = new Tone.Part((time, note) => {
+    playNote(note, time);
+  }, events);
+
+  exercisePart.start(0);
+  Tone.Transport.start();
+
+  document.getElementById('instruction-display').textContent = `Listen to the sequence...`;
+
+  const totalDuration = targetNotes.length * 0.8;
+  setTimeout(() => {
+    document.getElementById('instruction-display').textContent = `Now sing the sequence`;
+    isListening = true;
+    startMicrophone();
+
+  }, totalDuration * 1000);
+}
+
+
+
+
+function confirmAccordiRandom() {
+  const modal = document.getElementById('modal');
+  const title = document.getElementById('modal-title');
+  const buttons = document.getElementById('modal-buttons');
+  modal.style.display = 'flex';
+
+  buttons.innerHTML = '';
+  title.textContent = 'Seleziona il tuo vocal range:';
+
+  addButton('Bass (E2–E3)', () => {
+    vocalRange = { min: 82, max: 165 };
+    chooseStartingNoteForRandom();
+  });
+  addButton('Baritone (G2–G3)', () => {
+    vocalRange = { min: 98, max: 196 };
+    chooseStartingNoteForRandom();
+  });
+  addButton('Tenor (C3–C4)', () => {
+    vocalRange = { min: 130, max: 261 };
+    chooseStartingNoteForRandom();
+  });
+  addButton('Alto (F3–F4)', () => {
+    vocalRange = { min: 174, max: 349 };
+    chooseStartingNoteForRandom();
+  });
+  addButton('Mezzo (A3–A4)', () => {
+    vocalRange = { min: 220, max: 440 };
+    chooseStartingNoteForRandom();
+  });
+  addButton('Soprano (C4–C5)', () => {
+    vocalRange = { min: 261, max: 523 };
+    chooseStartingNoteForRandom();
+  });
+}
+
+
+function chooseStartingNoteForRandom() {
+  const modal = document.getElementById('modal');
+  const title = document.getElementById('modal-title');
+  const buttons = document.getElementById('modal-buttons');
+
+  buttons.innerHTML = '';
+  title.textContent = 'Scegli nota di partenza';
+
+  const startingNotes = ['G2', 'A2', 'B2', 'C3', 'D3', 'E3', 'F3', 'G3', 'A3', 'B3', 'C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
+
+  startingNotes.forEach(note => {
+    addButton(note, (selectedNote) => {
+      closeModal();
+      startAccordiRandom(selectedNote);
+    });
+  });
+}
+
+function stopExercise() {
+  console.log("Esercizio stoppato");
+  isListening = false;
+  currentStep = 0;
+  exerciseType = null;
+
+  Tone.Transport.stop();
+
+  document.getElementById('instruction-display').textContent = "Exercise stopped";
+  document.getElementById('note-display').textContent = "";
+}
+
+
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.confirmAccordiRandom = confirmAccordiRandom;
+
+document.getElementById('arpeggios-btn').addEventListener('click', () => {
+  stopExercise(); // ← aggiunto
+  openModal('Arpeggi');
+  showExerciseDescription('Arpeggi');
+});
+
+document.getElementById('scale-btn').addEventListener('click', () => {
+  stopExercise(); // ← aggiunto
+  openModal('Scale');
+  showExerciseDescription('Scale');
+});
+
+document.getElementById('random-intervals-btn').addEventListener('click', () => {
+  stopExercise(); // ← aggiunto
+  confirmAccordiRandom();
+  showExerciseDescription('Intervalli');
 });
 
 
-function saveNewGroup() {
-  const groupNameInput = document.getElementById("new-group-name");
-  const groupName = groupNameInput.value.trim();
-
-  if (!groupName) {
-    alert("Inserisci un nome per il gruppo.");
-    return;
-  }
-
-  const selectedExercises = Array.from(
-    document.querySelectorAll("#new-exercise-list input[type='checkbox']")
-  )
-    .filter((checkbox) => checkbox.checked)
-    .map((checkbox) => checkbox.value);
-
-  if (selectedExercises.length === 0) {
-    alert("Seleziona almeno un esercizio.");
-    return;
-  }
-
-  // Salva il gruppo (Model)
-  const newGroup = { name: groupName, exercises: selectedExercises };
-  saveGroupToLocalStorage(newGroup);
-
-  // Aggiorna la lista dei gruppi salvati (View)
-  renderSavedGroups();
-
-  // Chiudi il modal (View)
-  closeNewGroupModal();
-
-  alert(`Gruppo "${groupName}" salvato con successo!`);
-}
-
-// Event listener: per salvare i gruppi
-document.getElementById("save-group").addEventListener("click", saveExerciseGroup);
 
