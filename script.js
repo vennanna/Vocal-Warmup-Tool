@@ -988,7 +988,6 @@ function getCentsDifference(frequency, targetFrequency) {
 function playExerciseGroup(exerciseGroup) {
   let currentExerciseIndex = 0; // Indice dell'esercizio corrente
   let completedArpeggiosCumulative = 0; // Arpeggi completati in totale
-  isPlaying = true;
   isPaused = false;
 
   function playCurrentExercise() {
@@ -1026,9 +1025,9 @@ function playExerciseGroup(exerciseGroup) {
 
 
 function playArpeggioWithRange(selectedExerciseParam = DEFAULT_EXERCISE, totalExercises = 1, onCycleComplete = null, completedArpeggiosCumulative = 0) {
-  if (isPlaying) {
-    stopArpeggio(); // Ferma eventuale esercizio precedente
-  }
+  if (isPlaying) stopArpeggio();  
+  isPlaying = true;
+  isPaused  = false;
 
   const selectedRange = vocalRanges[vocalRangeSelector.value];
   minNote = selectedRange.min;
