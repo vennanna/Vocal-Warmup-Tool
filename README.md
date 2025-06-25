@@ -404,9 +404,8 @@ function startArpeggio(type, rootNote) {
     isListening = true;
   }, totalDuration * 1000);
 }
-
-
 ```
+
 - startScala(type, rootNote)
 ```bash
 function startScala(type, rootNote) {
@@ -461,6 +460,7 @@ function startScala(type, rootNote) {
 }
 ```
 - startAccordiRandom(startingNote)
+  
 ```bash
 function startAccordiRandom(startingNote) {
   exerciseType = 'intervalli-random';
