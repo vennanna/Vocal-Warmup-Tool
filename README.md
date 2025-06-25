@@ -130,7 +130,7 @@ Using MVC improves code separation, modularity, and maintainability, making it e
 This section describes the logic behind the execution of classic vocal exercises, i.e. those that do not use pitch detection.
 
 1. Main Playback Flow: When a user selects a vocal range and an exercise, the function playArpeggioWithRange(selectedExercise) is called.
-```bash
+```javascript
 function playArpeggioWithRange(selectedExerciseParam = DEFAULT_EXERCISE, totalExercises = 1, onCycleComplete = null, completedArpeggiosCumulative = 0) {
     if (isPlaying) stopArpeggio();  
 
@@ -169,7 +169,7 @@ This function:
 - Stops any currently running exercise.
 - Sets the selected vocal range and exercise.
 - Generates the notes of the exercise, transposed to fit within the selected vocal range, using the function generateInitialArpeggio(...).
-```bash
+```javascript
 function generateInitialArpeggio(minNote, referenceNote = DEFAULT_REFERENCE_NOTE, exerciseType = DEFAULT_EXERCISE) {
   const { notes, durations } = exercises[exerciseType];
   if (!notes || !durations) {
@@ -196,7 +196,7 @@ function generateInitialArpeggio(minNote, referenceNote = DEFAULT_REFERENCE_NOTE
 
 2. playNextNote():
 
-```bash
+```javascript
 function playNextNote() {
 
   if (isPaused) {
@@ -269,7 +269,7 @@ This function:
 Ascending notes are transposed by +1 semitone until reaching the top of the range. Then, the direction switches to descending, where each repetition lowers the notes by 3 semitones, until the minimum note is reached again. After a full up-down cycle, the completedRangeCycles counter increases.
 
 3. Exercise Groups: When a group of exercises is selected, the function playExerciseGroup(exerciseGroup) is triggered:
-```bash
+```javascript
 function playExerciseGroup(exerciseGroup) {
   let currentExerciseIndex = 0; // Indice dell'esercizio corrente
   let completedArpeggiosCumulative = 0; // Arpeggi completati in totale
@@ -321,7 +321,7 @@ This structure allows sequential execution of multiple exercises while maintaini
 Users can create custom exercise groups by selecting multiple vocal exercises and saving them with a custom name. These groups are saved in the browser’s localStorage, allowing them to persist across sessions.
 
 To achieve this, the app uses two key functions:
-```bash
+```javascript
 function saveGroupToLocalStorage(group) {
   const savedGroups = getSavedGroups();
   savedGroups.push(group);
@@ -357,7 +357,7 @@ Pitch detection exercises (arpeggios, scales, and random intervals) guide the us
 
 They then choose the scale type (major/minor/chromatic) and a starting note. Based on the selection, one of the following functions is called:
 - startArpeggio(type, rootNote)
-```bash
+```javascript
 function startArpeggio(type, rootNote) {
   exerciseType = 'arpeggio';
   currentStep = 0;
@@ -407,7 +407,7 @@ function startArpeggio(type, rootNote) {
 ```
 
 - startScala(type, rootNote)
-```bash
+```javascript
 function startScala(type, rootNote) {
   exerciseType = 'scale';
   currentStep = 0;
@@ -461,7 +461,7 @@ function startScala(type, rootNote) {
 ```
 - startAccordiRandom(startingNote)
   
-```bash
+```javascript
 function startAccordiRandom(startingNote) {
   exerciseType = 'intervalli-random';
   currentStep = 0;
@@ -524,7 +524,7 @@ Each function generates a list of targetNotes based on the exercise type:
 These notes are then played back using Tone.Part, allowing the user to hear the full sequence before singing.
 
 3. Microphone activation and pitch tracking: once the example has been played, the app activates the microphone by calling startMicrophone().
-```bash
+```javascript
 async function startMicrophone() {
   if (!audioContext || audioContext.state === 'closed') {
     audioContext = new AudioContext();
@@ -615,7 +615,7 @@ This process continues until all target notes have been successfully sung.
 
 
 ### Home: 
-![Home](Screenshots/Home.jpg)
+![Home](Screenshots/NewHome.png)
 
 ### Exercises: 
 ![Exercises](Screenshots/Exercises.jpg)
