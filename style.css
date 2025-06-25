@@ -141,7 +141,7 @@ button,
 }
 
 
-/* 🎹 Tastiera */
+/* Tastiera */
 #piano {
   display: flex;
   justify-content: center;
@@ -162,6 +162,7 @@ button,
   cursor: pointer;
   user-select: none;
   transition: transform 0.2s ease;
+  position: relative;
 }
 
 .key.white {
@@ -191,6 +192,30 @@ button,
   box-shadow: 0 0 10px #ada64b;
 }
 
+
+.key::after {
+  content: attr(data-note);     
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+  pointer-events: none;          
+  user-select: none;           
+}
+
+.key.white::after {
+  bottom: 4px;           
+  font-size: 0.6rem;
+  color: #363636;
+}
+
+
+.key.black::after {
+  top: 4px;             
+  font-size: 0.4rem;
+  color: #cecdcd;
+}
 
 
 /* Modal e Overlay */
@@ -225,6 +250,7 @@ button,
   overflow-y: auto;
   padding-right: 10px;
 }
+
 
 .modal-content::-webkit-scrollbar {
   width: 8px;
