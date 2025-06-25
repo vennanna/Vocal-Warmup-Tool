@@ -132,9 +132,11 @@ This section describes the logic behind the execution of classic vocal exercises
 1. Main Playback Flow: When a user selects a vocal range and an exercise, the function playArpeggioWithRange(selectedExercise) is called.
 ```bash
 function playArpeggioWithRange(selectedExerciseParam = DEFAULT_EXERCISE, totalExercises = 1, onCycleComplete = null, completedArpeggiosCumulative = 0) {
-  if (isPlaying) {
-    stopArpeggio();
-  }
+    if (isPlaying) stopArpeggio();  
+
+
+  isPlaying = true;
+  isPaused  = false;
 
   const selectedRange = vocalRanges[vocalRangeSelector.value];
   minNote = selectedRange.min;
