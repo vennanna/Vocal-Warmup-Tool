@@ -232,7 +232,7 @@ function playNextNote() {
       }
     } else {
 
-      const descendingStep = 3; // Scende di 3 semitoni invece di 1
+      const descendingStep = 3;
       notesData = notesData.map((note) => ({
         note: Tone.Frequency(note.note).transpose(-descendingStep).toNote(),
         duration: note.duration
@@ -271,8 +271,8 @@ Ascending notes are transposed by +1 semitone until reaching the top of the rang
 3. Exercise Groups: When a group of exercises is selected, the function playExerciseGroup(exerciseGroup) is triggered:
 ```javascript
 function playExerciseGroup(exerciseGroup) {
-  let currentExerciseIndex = 0; // Indice dell'esercizio corrente
-  let completedArpeggiosCumulative = 0; // Arpeggi completati in totale
+  let currentExerciseIndex = 0; 
+  let completedArpeggiosCumulative = 0; 
   isPlaying = true;
   isPaused = false;
 
@@ -576,7 +576,7 @@ async function startMicrophone() {
           }
 
           if (exerciseType === 'intervalli-random') {
-            playNote(targetNotes[currentStep]); // Suona la nota appena cantata giusta
+            playNote(targetNotes[currentStep]);
             currentStep++;
             holdStart = null;
             isHolding = false;
